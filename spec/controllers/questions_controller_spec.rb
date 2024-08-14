@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'pry'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
@@ -72,8 +71,10 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
+
         expect(assigns(:question)).to eq question
       end
+
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
         question.reload
@@ -90,6 +91,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
     context 'with invalid attributes' do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+
       it 'does not change question' do
         question.reload
 
@@ -112,6 +114,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'redirects to index' do
       delete :destroy, params: { id: question }
+
       expect(response).to redirect_to questions_path
     end
   end
