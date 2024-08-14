@@ -8,7 +8,7 @@ RSpec.describe AnswersController, type: :controller do
     before { get :new, params: { question_id: question } }
 
     it "" do
-      
+
     end
 
   end
