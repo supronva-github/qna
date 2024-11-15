@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'User can view list of question', %q{
   As a user
   I want to view the list of questions
-  } do
+} do
 
   given!(:questions) { create_list(:question, 3) }
 

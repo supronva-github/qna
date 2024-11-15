@@ -1,17 +1,17 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+
   def index
     @questions = Question.all
   end
 
   def show
+    @answer ||= question.answers.new
   end
 
-  def new
-  end
+  def new; end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @question = Question.new(question_params)
