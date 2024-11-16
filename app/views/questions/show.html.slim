@@ -2,3 +2,8 @@ h1= question.title
 p= question.body
 
 = render 'answers/form'
+
+table
+  tr
+    th Answers:
+  = render question.answers
