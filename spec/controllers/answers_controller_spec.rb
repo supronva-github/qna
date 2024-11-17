@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
+  let(:question) { create(:question, author: user) }
+  let(:answer) { create(:answer, question: question, author: user) }
   let(:user) { create(:user) }
 
   describe 'GET #new' do
     before { login(user) }
-    before { get :new, params: { question_id: question } }
+    before { get :new, params: { question_id: question, user_id: user} }
 
     it 'renders new view' do
       expect(response).to render_template :new
@@ -22,12 +22,12 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
-    let!(:answers) { create_list(:answer, 3, question: question) }
+    let!(:answers) { create_list(:answer, 3, question: question, author: user ) }
     let(:valid_params) { attributes_for(:answer) }
     let(:invalid_params) { attributes_for(:answer, :invalid) }
 
     before { login(user) }
-    subject { post :create, params: { question_id: question, answer: answer_params } }
+    subject { post :create, params: { question_id: question, answer: answer_params, author_id: user } }
 
     context 'with valid attributes' do
       let(:answer_params) { valid_params }

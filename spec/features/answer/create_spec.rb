@@ -5,7 +5,7 @@ feature 'User can create answers to the question', %q{
   I would like to be able to create answers to a question
 } do
 
-  given(:question) { create(:question) }
+  given(:question) { create(:question, author: user) }
   given(:user) { create(:user) }
 
   describe 'Authenticated user' do
