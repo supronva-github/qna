@@ -10,8 +10,8 @@ feature 'User can sign up', %q{
   given(:short_password) { '123'}
   given(:email) { 'new_mail@domain.com'}
 
+  background { visit new_user_registration_path }
   scenario 'Successful registration' do
-    visit new_user_registration_path
     sign_up(email: email, password: password, password_confirmation: password)
 
     expect(page).to have_content 'Welcome! You have signed up successfully.'
@@ -20,21 +20,18 @@ feature 'User can sign up', %q{
 
   describe 'Unsuccessful registration' do
     scenario 'When the entered passwords do not match' do
-      visit new_user_registration_path
       sign_up(email: email, password: password, password_confirmation: invalid_password_confirmation)
 
       expect(page).to have_content "Password confirmation doesn't match Password"
     end
 
     scenario 'When email is already in use' do
-      visit new_user_registration_path
       sign_up(email: user.email, password: password, password_confirmation: password)
 
       expect(page).to have_content 'Email has already been taken'
     end
 
     scenario 'When the registration form is not completed' do
-      visit new_user_registration_path
       sign_up(email: '', password: '', password_confirmation: '')
 
       expect(page).to have_content "Email can't be blank"
@@ -42,7 +39,6 @@ feature 'User can sign up', %q{
     end
 
     scenario 'When a password fails validation' do
-      visit new_user_registration_path
       sign_up(email: user.email, password: short_password, password_confirmation: short_password)
 
       expect(page).to have_content 'Password is too short (minimum is 6 characters)'

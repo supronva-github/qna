@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
+  let(:user) { create(:user) }
 
   describe 'GET #new' do
+    before { login(user) }
     before { get :new, params: { question_id: question } }
 
     it 'renders new view' do
@@ -24,6 +26,7 @@ RSpec.describe AnswersController, type: :controller do
     let(:valid_params) { attributes_for(:answer) }
     let(:invalid_params) { attributes_for(:answer, :invalid) }
 
+    before { login(user) }
     subject { post :create, params: { question_id: question, answer: answer_params } }
 
     context 'with valid attributes' do

@@ -6,21 +6,32 @@ feature 'User can create answers to the question', %q{
 } do
 
   given(:question) { create(:question) }
+  given(:user) { create(:user) }
 
-  background do
+  describe 'Authenticated user' do
+    background do
+      sign_in(user)
+      visit question_path(question)
+    end
+
+    scenario 'When answer created successfully' do
+      fill_in 'Body', with: 'Some answer'
+      click_on 'Create answer'
+      expect(page).to have_content 'Your answer successfully created.'
+      expect(page).to have_content 'Some answer'
+    end
+
+    scenario 'When answer created unsuccessfully' do
+      click_on 'Create answer'
+      expect(page).to have_content "Body can't be blank"
+    end
+  end
+
+  scenario 'An unauthenticated user is trying to answer a question' do
     visit question_path(question)
-
-  end
-
-  scenario '' do
-    fill_in 'Body', with: 'Some answer'
     click_on 'Create answer'
-    expect(page).to have_content 'Your answer successfully created.'
-    expect(page).to have_content 'Some answer'
-  end
 
-  scenario '' do
-    click_on 'Create answer'
-    expect(page).to have_content "Body can't be blank"
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(current_path).to eq new_user_session_path
   end
 end
