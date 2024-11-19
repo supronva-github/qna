@@ -4,7 +4,7 @@ feature 'User can view question with list of answers', %{
    As a user
    I'd like to be able to view list of answers
 } do
-  let(:question) { create(:question, answers_count: 2) }
+  let(:question) { create(:question, :with_answers, answers_count: 2) }
 
   scenario '' do
     visit question_path(question)

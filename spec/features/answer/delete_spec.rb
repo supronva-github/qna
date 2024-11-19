@@ -7,7 +7,7 @@ feature 'User can delete his answers', %q{
 
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
-  let!(:question) { create(:question, answers_count: 2, author: user) }
+  let!(:question) { create(:question, :with_answers ,answers_count: 2, author: user) }
 
   scenario 'Author delete answer' do
     sign_in(user)

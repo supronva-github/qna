@@ -58,17 +58,36 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'DELETE #destroy' do
     let!(:answer) { create(:answer, question: question, author: user) }
+    context 'when the user is the author of the answer' do
+      before { login(user) }
 
-    before { login(user) }
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      end
 
-    it 'deletes the answer' do
-      expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      it 'redirects to the question show page with a success notice' do
+        delete :destroy, params: { id: answer }
+
+        expect(response).to redirect_to question_path(question)
+         expect(flash[:notice]).to eq 'Answer successfully deleted.'
+      end
     end
 
-    it 'redirects to show question' do
-      delete :destroy, params: { id: answer }
+    context 'when the user is not the author of the answer' do
+      let(:other_user) { create(:user) }
 
-      expect(response).to redirect_to question_path(question)
+      before { login(other_user) }
+
+      it 'does not delete the answer' do
+        expect { delete :destroy,  params: { id: answer } }.not_to change(Answer, :count)
+      end
+
+      it 'redirects to the question show page with an error notice' do
+        delete :destroy, params: { id: answer }
+
+        expect(response).to redirect_to question_path(question)
+        expect(flash[:notice]).to eq 'Only author can delete answer.'
+      end
     end
   end
 end
