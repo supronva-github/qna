@@ -27,5 +27,8 @@ module Qna
                         request_specs: false,
                         controller_specs: true
     end
+
+    # Enable Remote Forms (XHR)
+    # config.action_view.form_with_generates_remote_forms = true
   end
 end

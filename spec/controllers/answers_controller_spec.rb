@@ -4,6 +4,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, author: user) }
   let(:answer) { create(:answer, question: question, author: user) }
   let(:user) { create(:user) }
+  let(:request_format) { :html }
 
   describe 'GET #new' do
     before { login(user) }
@@ -25,9 +26,10 @@ RSpec.describe AnswersController, type: :controller do
     let!(:answers) { create_list(:answer, 3, question: question, author: user ) }
     let(:valid_params) { attributes_for(:answer) }
     let(:invalid_params) { attributes_for(:answer, :invalid) }
+    let(:request_format) { :js }
 
     before { login(user) }
-    subject { post :create, params: { question_id: question, answer: answer_params, author_id: user } }
+    subject { post :create, params: { question_id: question, answer: answer_params, author_id: user }, format: request_format }
 
     context 'with valid attributes' do
       let(:answer_params) { valid_params }
@@ -38,12 +40,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to show view' do
         subject
-        expect(response).to redirect_to assigns(:answer)
+        expect(response).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
       let(:answer_params) { invalid_params }
+      let(:request_format) { :js }
 
       it 'does not save the answer' do
         expect { subject }.to_not change(Answer, :count)
@@ -51,7 +54,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders new view' do
         subject
-        expect(response).to render_template :new
+        expect(response).to render_template :create
       end
     end
   end
