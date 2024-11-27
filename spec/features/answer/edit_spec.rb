@@ -42,7 +42,7 @@ feature 'User can edit his answer', %q{
           click_on 'Save'
         end
 
-        within '.answers-erros' do
+        within '.answers-errors' do
           expect(page).to have_content "Body can't be blank"
         end
       end
@@ -52,7 +52,9 @@ feature 'User can edit his answer', %q{
       sign_in(other_user)
       visit question_path(question)
 
-      expect(page).to have_no_link 'Edit'
+      within '.answers' do
+        expect(page).to have_no_link 'Edit'
+      end
     end
   end
 end
