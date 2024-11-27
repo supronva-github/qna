@@ -1,5 +1,11 @@
 tr
   td = answer.body
-  - if current_user&.author_of?(answer)
+  - if current_user&.author_of?(answer) &&  user_signed_in?
     td
       = link_to 'Remove answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
+      = " "
+      = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+        = f.label :body, 'You answer'
+        = f.text_area :body
+        = f.submit 'Save'
+      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }

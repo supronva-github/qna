@@ -38,7 +38,7 @@ RSpec.describe AnswersController, type: :controller do
         expect { subject }.to change(Answer, :count).by(1)
       end
 
-      it 'redirects to show view' do
+      it 'renders create template' do
         subject
         expect(response).to render_template :create
       end
@@ -52,7 +52,7 @@ RSpec.describe AnswersController, type: :controller do
         expect { subject }.to_not change(Answer, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders create template ' do
         subject
         expect(response).to render_template :create
       end
@@ -90,6 +90,38 @@ RSpec.describe AnswersController, type: :controller do
 
         expect(response).to redirect_to question_path(question)
         expect(flash[:notice]).to eq 'Only author can delete answer.'
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    before { login(user) }
+
+    context 'with valid attributes' do
+      it 'chahges answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body'} }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: { body: 'new body'} }, format: :js
+
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'does not chahges answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid ) }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid ) }, format: :js
+
+        expect(response).to render_template :update
       end
     end
   end
