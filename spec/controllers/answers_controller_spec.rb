@@ -65,14 +65,13 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
       it 'redirects to the question show page with a success notice' do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: answer }, format: :js
 
-        expect(response).to redirect_to question_path(question)
-         expect(flash[:notice]).to eq 'Answer successfully deleted.'
+        expect(response).to render_template :destroy
       end
     end
 
@@ -82,14 +81,7 @@ RSpec.describe AnswersController, type: :controller do
       before { login(other_user) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy,  params: { id: answer } }.not_to change(Answer, :count)
-      end
-
-      it 'redirects to the question show page with an error notice' do
-        delete :destroy, params: { id: answer }
-
-        expect(response).to redirect_to question_path(question)
-        expect(flash[:notice]).to eq 'Only author can delete answer.'
+        expect { delete :destroy,  params: { id: answer }, format: :js }.not_to change(Answer, :count)
       end
     end
   end

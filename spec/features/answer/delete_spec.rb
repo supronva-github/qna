@@ -9,12 +9,15 @@ feature 'User can delete his answers', %q{
   let(:other_user) { create(:user) }
   let!(:question) { create(:question, :with_answers ,answers_count: 2, author: user) }
 
-  scenario 'Author delete answer' do
+  scenario 'Author delete answer', js: true do
     sign_in(user)
     visit question_path(question)
-    first('a', text: 'Remove answer').click
 
-    expect(page).to have_content 'Answer successfully deleted.'
+    accept_confirm do
+      first('a', text: 'Remove answer').click
+    end
+
+    expect(page).to_not have_content question.answers.first.body
   end
 
   scenario 'Non author delete answer' do

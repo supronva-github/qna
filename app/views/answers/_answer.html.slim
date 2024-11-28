@@ -1,8 +1,8 @@
-tr class="answer-#{answer.id}"
+tr id="answer-#{answer.id}"
   td = answer.body
   - if current_user&.author_of?(answer) &&  user_signed_in?
     td
-      = link_to 'Remove answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
+      = link_to 'Remove answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
       = " "
       = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         = f.label :body, 'You answer'
