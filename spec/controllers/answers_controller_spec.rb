@@ -117,4 +117,19 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #best' do
+    context 'user an author' do
+      before { login(user) }
+      before { patch :best, params: { id: answer, format: :js } }
+
+      it 'marks the answer as best' do
+        expect(answer.reload).to be_best
+      end
+
+      it 'render answer best' do
+        expect(response).to render_template :best
+      end
+    end
+  end
 end

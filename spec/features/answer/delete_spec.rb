@@ -5,16 +5,16 @@ feature 'User can delete his answers', %q{
   I can delete my answers to a question
 } do
 
-  let(:user) { create(:user) }
-  let(:other_user) { create(:user) }
-  let!(:question) { create(:question, :with_answers ,answers_count: 2, author: user) }
+  given(:user) { create(:user) }
+  given(:other_user) { create(:user) }
+  given!(:question) { create(:question, :with_answers ,answers_count: 1, author: user) }
 
   scenario 'Author delete answer', js: true do
     sign_in(user)
     visit question_path(question)
 
     accept_confirm do
-      first('a', text: 'Remove answer').click
+      find('a', text: 'Remove answer').click
     end
 
     expect(page).to_not have_content question.answers.first.body

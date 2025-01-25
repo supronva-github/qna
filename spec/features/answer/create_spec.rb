@@ -17,7 +17,6 @@ feature 'User can create answers to the question', %q{
     scenario 'When answer created successfully' do
       fill_in 'Body', with: 'Some answer'
       click_on 'Create answer'
-      # expect(page).to have_content 'Your answer successfully created.'
       expect(page).to have_content 'Some answer'
     end
 

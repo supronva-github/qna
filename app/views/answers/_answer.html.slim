@@ -1,7 +1,11 @@
-tr id="answer-#{answer.id}"
+tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#{answer.id}"
   td = answer.body
-  - if current_user&.author_of?(answer) &&  user_signed_in?
+  - if current_user&.author_of?(answer) && user_signed_in?
     td
+      - unless answer.best?
+        = button_to 'Best', best_answer_path(answer), method: :patch, remote: true, data: { answer_id: answer.id }, class: 'mark-as-best-btn'
+      - else
+        = button_to 'Best', best_answer_path(answer), class: 'hidden mark-as-best-btn', method: :patch, remote: true, data: { answer_id: answer.id }
       = link_to 'Remove answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
       = " "
       = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|

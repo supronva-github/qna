@@ -1,0 +1,18 @@
+var answerRow = $("#answer-<%= answer.id %>");
+$(".answers tr.best").removeClass("best");
+answerRow.addClass("best").prependTo(".answers");
+answerRow.find(".mark-as-best-btn").addClass("hidden");
+$(".answers tr").not(answerRow).find(".mark-as-best-btn").removeClass("hidden");
+
+var rows = $(".answers tr").not(".best").get();
+
+rows.sort(function(a, b) {
+    var aId = $(a).data("answer-id");
+    var bId = $(b).data("answer-id");
+
+    return bId - aId;
+});
+
+$.each(rows, function(index, row) {
+    $(".answers").append(row);
+});

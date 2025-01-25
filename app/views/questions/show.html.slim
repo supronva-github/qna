@@ -1,4 +1,3 @@
-
 .question
   h1.question-title = question.title
   p.question-body = question.body
@@ -20,6 +19,7 @@ table
       th Answers:
   tbody.answers
     .answers-errors
-    = render question.answers
+    = render partial: 'answers/answer', locals: { answer: @best_answer } if @best_answer
+    = render partial: 'answers/answer', collection: @other_answers
 
 = render 'answers/form'
