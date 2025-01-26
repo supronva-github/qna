@@ -12,16 +12,8 @@ feature 'User can delete question',%q{
   scenario 'When I delete my question' do
     sign_in(user)
     visit question_path(question)
-    click_on 'Delete'
+    click_on 'Delete question'
 
     expect(page).to have_content 'Question successfully deleted.'
-  end
-
-  scenario "When I delete someone else's question" do
-    sign_in(other_user)
-    visit question_path(question)
-    click_on 'Delete'
-
-    expect(page).to have_content 'Only author can delete question.'
   end
 end

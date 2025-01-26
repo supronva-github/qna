@@ -8,21 +8,20 @@ class AnswersController < ApplicationController
   def create
     @answer = question.answers.new(answer_params)
     @answer.author = current_user
-
-    if @answer.save
-      redirect_to @answer, notice: 'Your answer successfully created.'
-    else
-      render :new
-    end
+    @answer.save
   end
 
   def destroy
-    if current_user.author_of?(answer)
-      answer.destroy
-      redirect_to @answer.question, notice: 'Answer successfully deleted.'
-    else
-      redirect_to @answer.question, notice: 'Only author can delete answer.'
-    end
+    answer.destroy if current_user.author_of?(answer)
+  end
+
+  def update
+    answer.update(answer_params)
+    @question = answer.question
+  end
+
+  def best
+    answer.mark_as_best
   end
 
   private

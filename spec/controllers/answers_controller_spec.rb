@@ -4,6 +4,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, author: user) }
   let(:answer) { create(:answer, question: question, author: user) }
   let(:user) { create(:user) }
+  let(:request_format) { :html }
 
   describe 'GET #new' do
     before { login(user) }
@@ -25,9 +26,10 @@ RSpec.describe AnswersController, type: :controller do
     let!(:answers) { create_list(:answer, 3, question: question, author: user ) }
     let(:valid_params) { attributes_for(:answer) }
     let(:invalid_params) { attributes_for(:answer, :invalid) }
+    let(:request_format) { :js }
 
     before { login(user) }
-    subject { post :create, params: { question_id: question, answer: answer_params, author_id: user } }
+    subject { post :create, params: { question_id: question, answer: answer_params, author_id: user }, format: request_format }
 
     context 'with valid attributes' do
       let(:answer_params) { valid_params }
@@ -36,22 +38,23 @@ RSpec.describe AnswersController, type: :controller do
         expect { subject }.to change(Answer, :count).by(1)
       end
 
-      it 'redirects to show view' do
+      it 'renders create template' do
         subject
-        expect(response).to redirect_to assigns(:answer)
+        expect(response).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
       let(:answer_params) { invalid_params }
+      let(:request_format) { :js }
 
       it 'does not save the answer' do
         expect { subject }.to_not change(Answer, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders create template ' do
         subject
-        expect(response).to render_template :new
+        expect(response).to render_template :create
       end
     end
   end
@@ -62,14 +65,13 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
       it 'redirects to the question show page with a success notice' do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: answer }, format: :js
 
-        expect(response).to redirect_to question_path(question)
-         expect(flash[:notice]).to eq 'Answer successfully deleted.'
+        expect(response).to render_template :destroy
       end
     end
 
@@ -79,14 +81,54 @@ RSpec.describe AnswersController, type: :controller do
       before { login(other_user) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy,  params: { id: answer } }.not_to change(Answer, :count)
+        expect { delete :destroy,  params: { id: answer }, format: :js }.not_to change(Answer, :count)
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    before { login(user) }
+
+    context 'with valid attributes' do
+      it 'chahges answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body'} }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to the question show page with an error notice' do
-        delete :destroy, params: { id: answer }
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: { body: 'new body'} }, format: :js
 
-        expect(response).to redirect_to question_path(question)
-        expect(flash[:notice]).to eq 'Only author can delete answer.'
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'does not chahges answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid ) }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid ) }, format: :js
+
+        expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+    context 'user an author' do
+      before { login(user) }
+      before { patch :best, params: { id: answer, format: :js } }
+
+      it 'marks the answer as best' do
+        expect(answer.reload).to be_best
+      end
+
+      it 'render answer best' do
+        expect(response).to render_template :best
       end
     end
   end

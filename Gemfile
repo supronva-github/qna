@@ -30,6 +30,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 # Template View
 gem 'slim-rails'
+# Add JQuery
+gem 'jquery-rails'
 
 # Devise
 gem 'devise'

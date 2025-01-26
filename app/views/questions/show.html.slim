@@ -1,10 +1,25 @@
-h1= question.title
-p= question.body
-= link_to 'Delete', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
-
-= render 'answers/form'
+.question
+  h1.question-title = question.title
+  p.question-body = question.body
+  .question-errors
+  - if user_signed_in? && current_user&.author_of?(question)
+    = link_to 'Delete question', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
+    = " "
+    = link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
+    = form_with model: question, local: false, class: 'hidden', html: {id: "edit-question-#{question.id}" } do |f|
+      = f.label :title
+      = f.text_area :title
+      = f.label :body
+      = f.text_area :body
+      = f.submit 'Save'
 
 table
-  tr
-    th Answers:
-  = render @question.answers
+  thead
+    tr
+      th Answers:
+  tbody.answers
+    .answers-errors
+    = render partial: 'answers/answer', locals: { answer: @best_answer } if @best_answer
+    = render partial: 'answers/answer', collection: @other_answers
+
+= render 'answers/form'
