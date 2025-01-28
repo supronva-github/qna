@@ -1,5 +1,8 @@
 tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#{answer.id}"
   td = answer.body
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      td = link_to file.filename.to_s, url_for(file)
   - if current_user&.author_of?(answer) && user_signed_in?
     td
       - unless answer.best?

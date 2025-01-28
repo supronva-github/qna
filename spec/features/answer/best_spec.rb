@@ -21,7 +21,7 @@ feature 'User can choose the best answer', %q{
       expect(page).to have_no_css("tr#answer-#{answer.id} .mark-as-best-btn")
     end
 
-    scenario 'The user is not the author and cannot select the best answer' do
+    scenario 'the user is not the author and cannot select the best answer' do
       sign_in(other_user)
       visit question_path(question)
 

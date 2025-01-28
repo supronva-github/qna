@@ -14,15 +14,26 @@ feature 'User can create answers to the question', %q{
       visit question_path(question)
     end
 
-    scenario 'When answer created successfully' do
+    scenario 'when answer created successfully' do
       fill_in 'Body', with: 'Some answer'
       click_on 'Create answer'
+
       expect(page).to have_content 'Some answer'
     end
 
-    scenario 'When answer created unsuccessfully' do
+    scenario 'when answer created unsuccessfully' do
       click_on 'Create answer'
+
       expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario 'ask a answer whith attached file' do
+      fill_in 'Body', with: 'text text'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Create answer'
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
     end
   end
 
