@@ -21,7 +21,7 @@ feature 'User can delete his files to the question', %q{
       expect(page).to_not have_link 'rails_helper.rb'
     end
 
-    scenario 'Non author delete files for answer' do
+    scenario 'Non author can not delete question files' do
       sign_in(other_user)
       visit question_path(question)
 

@@ -2,7 +2,11 @@ tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#
   td = answer.body
   - if answer.files.attached?
     - answer.files.each do |file|
-      td = link_to file.filename.to_s, url_for(file)
+      td id="attachment-#{file.id}"
+        = link_to file.filename.to_s, url_for(file)
+        = " "
+        - if user_signed_in? && current_user&.author_of?(answer)
+          = link_to 'Delete file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
   - if current_user&.author_of?(answer) && user_signed_in?
     td
       - unless answer.best?
