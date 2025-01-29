@@ -27,12 +27,25 @@ feature 'User can edit his answer', %q{
       scenario 'successfully' do
         within '.answers' do
           fill_in 'You answer', with: 'edited answer'
-
           click_on 'Save'
 
           expect(page).to_not have_content question.answers.first.body
           expect(page).to have_content 'edited answer'
           expect(page).to_not have_selector 'textarea'
+        end
+      end
+
+      scenario 'successfully with attach files' do
+        within '.answers' do
+          fill_in 'You answer', with: 'edited answer'
+          attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/spec_helper.rb').to_s}"]
+          click_on 'Save'
+
+          expect(page).to_not have_content question.answers.first.body
+          expect(page).to have_content 'edited answer'
+          expect(page).to_not have_selector 'textarea'
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
         end
       end
 
