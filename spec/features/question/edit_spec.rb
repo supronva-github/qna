@@ -23,7 +23,7 @@ feature 'User can edit his question', %q{
         visit question_path(question)
       end
 
-      scenario 'successfully' do
+      scenario 'successfully edits question' do
         within '.question' do
           click_on 'Edit question'
           fill_in 'Title', with: 'new title question'
@@ -35,6 +35,25 @@ feature 'User can edit his question', %q{
           expect(page).to have_content 'new title question'
           expect(page).to have_content 'new body question'
           expect(page).to_not have_selector 'textarea'
+        end
+      end
+
+      scenario 'successfully edits question with attach files' do
+        within '.question' do
+          click_on 'Edit question'
+          fill_in 'Title', with: 'new title question'
+          fill_in 'Body', with: 'new body question'
+
+          attach_file 'Files', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/spec_helper.rb').to_s}"]
+          click_on 'Save'
+
+          expect(page).to_not have_content question.title
+          expect(page).to_not have_content question.body
+          expect(page).to have_content 'new title question'
+          expect(page).to have_content 'new body question'
+          expect(page).to_not have_selector 'textarea'
+          expect(page).to have_link 'spec_helper.rb'
+          expect(page).to have_link 'rails_helper.rb'
         end
       end
 
