@@ -12,12 +12,14 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    ActiveRecord::Base.transaction do
-      if answer.question.best_answer == answer
-        answer.question.update!(best_answer: nil)
-      end
+    if current_user.author_of?(answer)
+      ActiveRecord::Base.transaction do
+        if answer.question.best_answer == answer
+          answer.question.update!(best_answer: nil)
+        end
 
-      answer.destroy! if current_user.author_of?(answer)
+        answer.destroy!
+      end
     end
   end
 
