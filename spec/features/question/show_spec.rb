@@ -6,7 +6,7 @@ feature 'User can view question with list of answers', %{
 } do
   given(:question) { create(:question, :with_answers, answers_count: 2) }
 
-  scenario '' do
+  scenario 'The user sees the question' do
     visit question_path(question)
 
     expect(page).to have_content(question.title)

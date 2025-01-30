@@ -1,15 +1,25 @@
 tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#{answer.id}"
   td = answer.body
-  - if current_user&.author_of?(answer) && user_signed_in?
-    td
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      td id="attachment-#{file.id}"
+        = link_to file.filename.to_s, url_for(file)
+        = " "
+        - if user_signed_in? && current_user&.author_of?(answer)
+          = link_to 'Delete file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
+  td
+    - if current_user&.author_of?(answer.question) && user_signed_in?
       - unless answer.best?
         = button_to 'Best', best_answer_path(answer), method: :patch, remote: true, data: { answer_id: answer.id }, class: 'mark-as-best-btn'
       - else
         = button_to 'Best', best_answer_path(answer), class: 'hidden mark-as-best-btn', method: :patch, remote: true, data: { answer_id: answer.id }
+    - if current_user&.author_of?(answer) && user_signed_in?
       = link_to 'Remove answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
       = " "
       = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         = f.label :body, 'You answer'
         = f.text_area :body
+        = f.label :files
+        = f.file_field :files, multiple: true
         = f.submit 'Save'
       = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }

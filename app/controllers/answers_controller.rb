@@ -12,7 +12,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.destroy if current_user.author_of?(answer)
+    if current_user.author_of?(answer)
+      ActiveRecord::Base.transaction do
+        if answer.question.best_answer == answer
+          answer.question.update!(best_answer: nil)
+        end
+
+        answer.destroy!
+      end
+    end
   end
 
   def update
@@ -27,7 +35,7 @@ class AnswersController < ApplicationController
   private
 
   def answer
-    @answer ||= params[:id] ? Answer.find(params[:id]) : question.answers.new
+    @answer ||= params[:id] ? Answer.with_attached_files.find(params[:id]) : question.answers.new
   end
 
   def question
@@ -37,6 +45,6 @@ class AnswersController < ApplicationController
   helper_method :question, :answer
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
