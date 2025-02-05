@@ -1,0 +1,7 @@
+.nested-fields
+  .field.inline-form
+    = f.label :name, 'Link name'
+    = f.text_field :name
+    = f.label :url, 'URL'
+    = f.text_field :url
+    = link_to_remove_association "Remove link", f, class: 'remove-link'

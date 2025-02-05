@@ -7,10 +7,7 @@
     = f.file_field :files, multiple: true
   p
     = f.fields_for :links do |l|
-      p
-        = l.label :name, 'Link name'
-        = l.text_field :name
-      p
-        = l.label :url, 'URL'
-        = l.text_field :url
+      = render 'shared/links_fields', f: l
+    .links
+      = link_to_add_association 'Add link', f, :links, partial: 'shared/links_fields'
   p= f.submit 'Create answer'

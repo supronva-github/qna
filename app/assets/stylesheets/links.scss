@@ -1,0 +1,25 @@
+.inline-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.inline-form .field label {
+  margin-right: 5px;
+}
+
+.inline-form .field input {
+  margin-right: 5px;
+}
+
+.inline-form .remove-link {
+  color: #d9534f;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.inline-form .remove-link:hover {
+  text-decoration: underline;
+}
