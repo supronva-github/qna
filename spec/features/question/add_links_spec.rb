@@ -10,6 +10,7 @@ feature 'User can add adn delete links to question', %q{
   given(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/supronva-github/bf1d4644eccb10d50a38da6b744fc470' }
   given(:new_link) { 'http://new-link.com' }
+  given(:invalid) { 'invalid_url' }
 
   background do
     sign_in(user)
@@ -39,5 +40,16 @@ feature 'User can add adn delete links to question', %q{
     click_on 'Remove link'
 
     expect(page).to_not have_css('.nested-fields')
+  end
+
+  scenario 'User cannot add invalid link when posting an question', js: true do
+    fill_in 'Title', with: 'Text question'
+    fill_in 'Body', with: 'text text text'
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'URL', with: invalid
+
+    click_on 'Ask'
+
+    expect(page).not_to have_link('My gist', href: 'invalid')
   end
 end
