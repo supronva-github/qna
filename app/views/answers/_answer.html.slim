@@ -26,5 +26,9 @@ tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#
         = f.text_area :body
         = f.label :files
         = f.file_field :files, multiple: true
+        = f.fields_for :links do |l|
+          = render 'shared/links_fields', f: l
+        .links
+          = link_to_add_association 'Add link', f, :links, partial: 'shared/links_fields'
         = f.submit 'Save'
       = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
