@@ -13,7 +13,8 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    question.links.new
+    question.links.build
+    question.build_badge
   end
 
   def edit; end
@@ -24,6 +25,8 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
+      @question.links.build if @question.links.empty?
+      @question.build_badge if @question.badge.nil?
       render :new
     end
   end
@@ -51,6 +54,7 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body, files: [],
-                                    links_attributes: [:name, :url, :id, :_destroy])
+                                    links_attributes: [:name, :url, :id, :_destroy],
+                                    badge_attributes: [:name, :image, :id])
   end
 end

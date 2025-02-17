@@ -121,14 +121,21 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #best' do
     context 'user an author' do
       before { login(user) }
-      before { patch :best, params: { id: answer, format: :js } }
+
+      subject { patch :best, params: { id: answer, format: :js } }
 
       it 'marks the answer as best' do
+        subject
         expect(answer.reload).to be_best
       end
 
       it 'render answer best' do
+        subject
         expect(response).to render_template :best
+      end
+
+      it 'changes the number of badges for the user' do
+        expect { subject }.to change(user.badges, :count).by(1)
       end
     end
   end

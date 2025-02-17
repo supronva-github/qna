@@ -29,7 +29,10 @@ class AnswersController < ApplicationController
   end
 
   def best
-    answer.mark_as_best
+    ActiveRecord::Base.transaction do
+      answer.mark_as_best
+      answer.question.badge&.assign_to_winner(answer.author)
+    end
   end
 
   private
