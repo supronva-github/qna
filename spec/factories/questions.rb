@@ -8,8 +8,10 @@ FactoryBot.define do
       title { nil }
     end
 
-    after(:create) do |question|
-      create(:badge, question: question)
+    trait :with_badge do
+      after(:create) do |question|
+        create(:badge, question: question)
+      end
     end
 
     trait :with_answers do

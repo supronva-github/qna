@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users, path_names: { sign_in: :login, sign_out: :logout }
 
+  get 'badges', to: 'users#badges'
+
   resources  :questions do
     resources :answers, shallow: true, except: %i[index] do
       patch :best, on: :member

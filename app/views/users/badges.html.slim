@@ -1,0 +1,13 @@
+h1 My badges
+
+table
+  thead
+    tr
+      th Question title
+      th Badge
+
+  tbody
+    - @badges.each do |badge|
+      tr
+        td = badge.question.title
+        td = image_tag url_for(badge.image) if badge.image.attached?
