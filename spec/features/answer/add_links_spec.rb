@@ -9,6 +9,7 @@ feature 'User can add and deleted links to answer', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question, author: user) }
+  given(:link) { 'http://link.com' }
   given(:gist_url) { 'https://gist.github.com/supronva-github/bf1d4644eccb10d50a38da6b744fc470' }
   given(:new_link) { 'http://new-link.com' }
   given(:invalid) { 'invalid_url' }
@@ -22,7 +23,7 @@ feature 'User can add and deleted links to answer', %q{
     within '.new-answer' do
       fill_in 'Body', with: 'Some answer'
       fill_in 'Link name', with: 'My gist'
-      fill_in 'URL', with: gist_url
+      fill_in 'URL', with: link
     end
 
     click_on 'Add link'
@@ -35,8 +36,24 @@ feature 'User can add and deleted links to answer', %q{
     click_on 'Create answer'
 
     within '.answers' do
-      expect(page).to have_link 'My gist', href: gist_url
+      expect(page).to have_link 'My gist', href: link
       expect(page).to have_link 'New link', href: new_link
+    end
+  end
+
+
+  scenario 'User add gist link when asks answer', js: true do
+    within '.new-answer' do
+      fill_in 'Body', with: 'Some answer'
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'URL', with: gist_url
+    end
+
+    click_on 'Add link'
+    click_on 'Create answer'
+
+    within '.answers' do
+      expect(page).to have_css('li.gist-link')
     end
   end
 

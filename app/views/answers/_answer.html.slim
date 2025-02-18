@@ -4,7 +4,7 @@ tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#
     p Links:
     ul
       - answer.links.each do |link|
-        li= link_to link.name, link.url
+        = display_link(link)
   - if answer.files.attached?
     - answer.files.each do |file|
       td id="attachment-#{file.id}"

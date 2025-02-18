@@ -8,6 +8,7 @@ feature 'User can add adn delete links to question', %q{
 } do
 
   given(:user) { create(:user) }
+  given(:link) { 'http://link.com' }
   given(:gist_url) { 'https://gist.github.com/supronva-github/bf1d4644eccb10d50a38da6b744fc470' }
   given(:new_link) { 'http://new-link.com' }
   given(:invalid) { 'invalid_url' }
@@ -21,7 +22,7 @@ feature 'User can add adn delete links to question', %q{
     fill_in 'Title', with: 'Text question'
     fill_in 'Body', with: 'text text text'
     fill_in 'Link name', with: 'My gist'
-    fill_in 'URL', with: gist_url
+    fill_in 'URL', with: link
 
     click_on 'Add link'
 
@@ -32,8 +33,20 @@ feature 'User can add adn delete links to question', %q{
 
     click_on 'Ask'
 
-    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_link 'My gist', href: link
     expect(page).to have_link 'New link', href: new_link
+  end
+
+  scenario 'User add gist link when asks question', js: true do
+    fill_in 'Title', with: 'Text question'
+    fill_in 'Body', with: 'text text text'
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'URL', with: gist_url
+
+    click_on 'Add link'
+    click_on 'Ask'
+
+    expect(page).to have_css('li.gist-link')
   end
 
   scenario 'User remove link at question', js: true do

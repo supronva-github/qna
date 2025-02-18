@@ -4,6 +4,10 @@ class Link < ApplicationRecord
   validates :name, :url, presence: true
   validate :url_must_be_valid
 
+  def gist?
+    url.match?(/^https:\/\/gist.github.com\//)
+  end
+
   private
 
   def url_must_be_valid

@@ -6,7 +6,7 @@ p =  question.body
   p Links:
   ul
     - question.links.each do |link|
-      li= link_to link.name, link.url
+      = display_link(link)
 - if question.files.attached?
   - question.files.each do |file|
      p id="attachment-#{file.id}"
