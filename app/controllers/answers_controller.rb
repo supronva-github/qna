@@ -12,15 +12,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(answer)
-      ActiveRecord::Base.transaction do
-        if answer.question.best_answer == answer
-          answer.question.update!(best_answer: nil)
-        end
-
-        answer.destroy!
-      end
-    end
+    answer.remove_with_reset if current_user.author_of?(answer)
   end
 
   def update
@@ -29,10 +21,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    ActiveRecord::Base.transaction do
-      answer.mark_as_best
-      answer.question.badge&.assign_to_winner(answer.author)
-    end
+    answer.mark_as_best
   end
 
   private

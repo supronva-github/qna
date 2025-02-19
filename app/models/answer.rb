@@ -12,8 +12,18 @@ class Answer < ApplicationRecord
   scope :by_add, -> { order(created_at: :desc) }
 
   def mark_as_best
-		question.update(best_answer_id: self.id)
+    transaction do
+		  question.update(best_answer_id: self.id)
+      question.badge&.assign_to_winner(self.author)
+    end
 	end
+
+  def remove_with_reset
+    transaction do
+      question.update!(best_answer: nil) if question.best_answer == self
+      destroy!
+    end
+  end
 
   def best?
     question&.best_answer_id == self.id
