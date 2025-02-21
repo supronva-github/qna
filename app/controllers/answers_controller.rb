@@ -12,7 +12,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.remove_with_reset if current_user.author_of?(answer)
+    answer.destroy! if current_user.author_of?(answer)
   end
 
   def update

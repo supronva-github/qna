@@ -18,13 +18,6 @@ class Answer < ApplicationRecord
     end
 	end
 
-  def remove_with_reset
-    transaction do
-      question.update!(best_answer: nil) if question.best_answer == self
-      destroy!
-    end
-  end
-
   def best?
     question&.best_answer_id == self.id
   end
