@@ -1,6 +1,9 @@
 class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :author, class_name: 'User', foreign_key: :author_id
+  has_many :links, dependent: :destroy, as: :linkable
+
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   has_many_attached :files, dependent: :destroy
 
@@ -9,7 +12,10 @@ class Answer < ApplicationRecord
   scope :by_add, -> { order(created_at: :desc) }
 
   def mark_as_best
-		question.update(best_answer_id: self.id)
+    transaction do
+		  question.update(best_answer_id: self.id)
+      question.badge&.assign_to_winner(self.author)
+    end
 	end
 
   def best?

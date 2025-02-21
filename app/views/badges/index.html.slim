@@ -1,0 +1,12 @@
+table
+  thead
+    tr
+      th Question
+      th Name
+      th Bage
+  tbody
+    - @badges.each do |badge|
+      tr
+        td = badge.name
+        td = badge.question.title
+        td = image_tag url_for(badge.image), class: 'badge-image'

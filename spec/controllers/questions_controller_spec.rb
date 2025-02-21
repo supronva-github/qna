@@ -21,6 +21,10 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #show' do
     before { get :show, params: { id: question } }
 
+    it 'assigns new link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
+
     it 'renders show view' do
       expect(response).to render_template :show
     end
@@ -29,6 +33,14 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
     before { login(user) }
     before { get :new }
+
+    it 'assigns a new Link' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
+    end
+
+    it 'assigns a new bage' do
+      expect(assigns(:question).badge).to be_a_new(Badge)
+    end
 
     it 'renders new view' do
       expect(response).to render_template :new

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question, author: user) }
+  let(:question) { create(:question, :with_badge, author: user) }
   let(:answer) { create(:answer, question: question, author: user) }
   let(:user) { create(:user) }
   let(:request_format) { :html }
@@ -121,14 +121,21 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #best' do
     context 'user an author' do
       before { login(user) }
-      before { patch :best, params: { id: answer, format: :js } }
+
+      subject { patch :best, params: { id: answer, format: :js } }
 
       it 'marks the answer as best' do
+        subject
         expect(answer.reload).to be_best
       end
 
       it 'render answer best' do
+        subject
         expect(response).to render_template :best
+      end
+
+      it 'changes the number of badges for the user' do
+        expect { subject }.to change(user.badges, :count).by(1)
       end
     end
   end

@@ -1,7 +1,12 @@
-h1 = question.title
-p =  question.body
 
 .question-errors
+h1 = question.title
+p =  question.body
+.links
+  p Links:
+  ul
+    - question.links.each do |link|
+      = display_link(link)
 - if question.files.attached?
   - question.files.each do |file|
      p id="attachment-#{file.id}"

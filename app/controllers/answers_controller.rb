@@ -12,15 +12,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(answer)
-      ActiveRecord::Base.transaction do
-        if answer.question.best_answer == answer
-          answer.question.update!(best_answer: nil)
-        end
-
-        answer.destroy!
-      end
-    end
+    answer.destroy! if current_user.author_of?(answer)
   end
 
   def update
@@ -45,6 +37,7 @@ class AnswersController < ApplicationController
   helper_method :question, :answer
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [],
+                                    links_attributes: [:name, :url, :id, :_destroy])
   end
 end

@@ -1,10 +1,26 @@
 - html ||= {}
 
 = form_with model: question, local: local, html: html do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.label :files
-  = f.file_field :files, multiple: true
-  = f.submit question.persisted? ? 'Save' : 'Ask'
+  p
+    = f.label :title
+    = f.text_field :title
+  p
+    = f.label :body
+    = f.text_area :body
+  p
+    = f.label :files
+    = f.file_field :files, multiple: true
+  p Links:
+  p
+    = f.fields_for :links do |l|
+      = render 'shared/links_fields', f: l
+    .links
+      = link_to_add_association 'Add link', f, :links, partial: 'shared/links_fields'
+  p
+    = f.fields_for :badge do |b|
+      = b.label :name, 'Badge name'
+      = b.text_field :name
+      = b.label :image
+      = b.file_field :image
+
+  p= f.submit question.persisted? ? 'Save' : 'Ask'

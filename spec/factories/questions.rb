@@ -8,6 +8,12 @@ FactoryBot.define do
       title { nil }
     end
 
+    trait :with_badge do
+      after(:create) do |question|
+        create(:badge, question: question)
+      end
+    end
+
     trait :with_answers do
       transient do
         answers_count { 1 }
