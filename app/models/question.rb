@@ -1,10 +1,11 @@
 class Question < ApplicationRecord
+  include Votable
+
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
   belongs_to :author, class_name: 'User', foreign_key: :author_id
   belongs_to :best_answer, class_name: 'Answer', optional: true
   has_one :badge, dependent: :destroy
-  has_many :votes, as: :votable, dependent: :destroy
 
   has_many_attached :files, dependent: :destroy
 
