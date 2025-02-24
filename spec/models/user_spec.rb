@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { should have_many(:owner_answers).class_name('Answer').with_foreign_key(:author_id) }
   it { should have_many(:owner_questions).class_name('Question').with_foreign_key(:author_id) }
+  it { should have_many(:badges) }
+  it { should have_many(:votes).dependent(:nullify) }
 
   it { should validate_presence_of(:email) }
   it { should validate_presence_of(:password) }
