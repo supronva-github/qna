@@ -137,26 +137,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #like' do
-    before { login(user) }
+    it_behaves_like 'vote action', :like, :question, 1
+  end
 
-    context 'when you like' do
-      it 'creates a vote with value 1 and returns :ok' do
-        expect { post :like, params: { id: question.id }, as: :json }
-          .to change(Vote, :count).by(1)
-
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    context 'when the user has already liked' do
-      let!(:vote) { create(:vote, user: user, votable: question) }
-
-      it 'does not create a new vote and returns :unprocessable_entity' do
-        expect { post :like, params: { id: question.id }, as: :json }
-          .not_to change(Vote, :count)
-
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
+  describe 'POST #dislike' do
+    it_behaves_like 'vote action', :dislike, :question, -1
   end
 end

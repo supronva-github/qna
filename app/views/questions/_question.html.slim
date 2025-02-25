@@ -16,6 +16,8 @@ p =  question.body
         = link_to 'Delete file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }, remote: true, local: false
 = link_to like_question_path(question), method: :post, class: 'btn btn-primary' do
   i class="bi bi-hand-thumbs-up-fill"
+= link_to dislike_question_path(question), method: :post, class: 'btn btn-primary' do
+  i class="bi bi-hand-thumbs-down-fill"
 - if user_signed_in? && current_user&.author_of?(question)
   = link_to 'Delete question', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
   = " "

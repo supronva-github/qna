@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   concern :votable do
     post :like, on: :member
+    post :dislike, on: :member
   end
 
   get 'badges', to: 'users#badges'

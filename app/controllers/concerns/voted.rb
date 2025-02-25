@@ -2,11 +2,21 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_resource, only: %i[like]
+    before_action :set_resource, only: %i[like dislike]
   end
 
   def like
     result = @votable.vote_up(current_user)
+
+    if result.persisted?
+      render json: result, status: :ok
+    else
+      render json: result.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
+  def dislike
+    result = @votable.vote_down(current_user)
 
     if result.persisted?
       render json: result, status: :ok
