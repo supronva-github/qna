@@ -6,23 +6,17 @@ module Voted
   end
 
   def like
-    result = @votable.vote_up(current_user)
-
-    if result == :removed
-      render json: { message: "Like removed", rating: @votable.rating }, status: :ok
-    else
-      render json: { message: "Vote successful", result: result, rating: @votable.rating }, status: :ok
-    end
+    @votable.vote_up(current_user)
+    render json: { message: "Vote successful", rating: @votable.rating }, status: :ok
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def dislike
-    result = @votable.vote_down(current_user)
-
-    if result == :removed
-      render json: { message: "Dislike removed", rating: @votable.rating }, status: :ok
-    else
-      render json: { message: "Vote successful", result: result, rating: @votable.rating }, status: :ok
-    end
+    @votable.vote_down(current_user)
+    render json: { message: "Vote successful", rating: @votable.rating }, status: :ok
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private

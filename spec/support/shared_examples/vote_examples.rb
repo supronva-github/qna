@@ -35,4 +35,18 @@ RSpec.shared_examples 'vote action' do |action, votable_type, value|
       expect(Vote.last.value).to eq(value)
     end
   end
+
+  context 'when an error occurs during voting' do
+    before do
+      allow_any_instance_of(votable_type.to_s.classify.constantize).to receive(:vote_up).and_raise(StandardError, 'Error')
+      allow_any_instance_of(votable_type.to_s.classify.constantize).to receive(:vote_down).and_raise(StandardError, 'Error')
+    end
+
+    it 'returns :unprocessable_entity with an error message' do
+      post action, params: { id: votable.id }, as: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)['error']).to eq('Error')
+    end
+  end
 end

@@ -22,14 +22,31 @@ module Votable
   def toggle_vote(user, value)
     existing_vote = votes.find_by(user: user)
 
-    if existing_vote
-      return :removed if existing_vote.value == value && existing_vote.destroy
-
-      existing_vote.update(value: value)
-    else
-      existing_vote = votes.create(user: user, value: value)
+    case existing_vote
+    when nil
+      create_vote(user, value)
+    when Vote
+      handle_existing_vote(existing_vote, value)
     end
 
-    existing_vote
+    true
+  end
+
+  private
+
+  def handle_existing_vote(vote, value)
+    vote.value == value ? destroy_vote(vote) : update_vote(vote, value)
+  end
+
+  def destroy_vote(vote)
+    vote.destroy!
+  end
+
+  def update_vote(vote, new_value)
+    vote.update!(value: new_value)
+  end
+
+  def create_vote(user, value)
+    votes.create!(user: user, value: value)
   end
 end
