@@ -3,10 +3,15 @@ Rails.application.routes.draw do
 
   devise_for :users, path_names: { sign_in: :login, sign_out: :logout }
 
+  concern :votable do
+    post :like, on: :member
+    post :dislike, on: :member
+  end
+
   get 'badges', to: 'users#badges'
 
-  resources  :questions do
-    resources :answers, shallow: true, except: %i[index] do
+  resources  :questions, concerns: :votable do
+    resources :answers, shallow: true, except: %i[index], concerns: :votable do
       patch :best, on: :member
     end
   end

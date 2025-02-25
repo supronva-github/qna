@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_21_123848) do
+ActiveRecord::Schema.define(version: 2025_02_24_142903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,19 @@ ActiveRecord::Schema.define(version: 2025_02_21_123848) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "votable_type", null: false
+    t.bigint "votable_id", null: false
+    t.integer "value", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "votable_type", "votable_id"], name: "index_votes_on_user_id_and_votable_type_and_votable_id", unique: true
+    t.index ["user_id"], name: "index_votes_on_user_id"
+    t.index ["votable_type", "votable_id"], name: "index_votes_on_votable"
+    t.check_constraint "value = ANY (ARRAY['-1'::integer, 0, 1])", name: "check_vote_value"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"
@@ -104,4 +117,5 @@ ActiveRecord::Schema.define(version: 2025_02_21_123848) do
   add_foreign_key "badges", "users", column: "winner_id"
   add_foreign_key "questions", "answers", column: "best_answer_id", on_delete: :nullify
   add_foreign_key "questions", "users", column: "author_id"
+  add_foreign_key "votes", "users", on_delete: :nullify
 end

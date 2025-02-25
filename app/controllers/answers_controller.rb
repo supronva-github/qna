@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: %i[index show]
 
   def new; end
@@ -8,7 +10,12 @@ class AnswersController < ApplicationController
   def create
     @answer = question.answers.new(answer_params)
     @answer.author = current_user
-    @answer.save
+
+    if @answer.save
+      render @answer
+    else
+      render partial: 'shared/errors', locals: { resource: @answer }, status: :unprocessable_entity
+    end
   end
 
   def destroy

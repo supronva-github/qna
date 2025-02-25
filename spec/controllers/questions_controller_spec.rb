@@ -135,4 +135,12 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to redirect_to questions_path
     end
   end
+
+  describe 'POST #like' do
+    it_behaves_like 'vote action', :like, :question, 1
+  end
+
+  describe 'POST #dislike' do
+    it_behaves_like 'vote action', :dislike, :question, -1
+  end
 end

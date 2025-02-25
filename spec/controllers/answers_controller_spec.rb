@@ -26,7 +26,6 @@ RSpec.describe AnswersController, type: :controller do
     let!(:answers) { create_list(:answer, 3, question: question, author: user ) }
     let(:valid_params) { attributes_for(:answer) }
     let(:invalid_params) { attributes_for(:answer, :invalid) }
-    let(:request_format) { :js }
 
     before { login(user) }
     subject { post :create, params: { question_id: question, answer: answer_params, author_id: user }, format: request_format }
@@ -40,13 +39,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders create template' do
         subject
-        expect(response).to render_template :create
+        expect(response).to render_template('answers/_answer')
       end
     end
 
     context 'with invalid attributes' do
       let(:answer_params) { invalid_params }
-      let(:request_format) { :js }
 
       it 'does not save the answer' do
         expect { subject }.to_not change(Answer, :count)
@@ -54,7 +52,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders create template ' do
         subject
-        expect(response).to render_template :create
+        expect(response).to render_template('shared/_errors')
       end
     end
   end
@@ -138,5 +136,13 @@ RSpec.describe AnswersController, type: :controller do
         expect { subject }.to change(user.badges, :count).by(1)
       end
     end
+  end
+
+  describe 'POST #like' do
+    it_behaves_like 'vote action', :like, :answer, 1
+  end
+
+  describe 'POST #dislike' do
+    it_behaves_like 'vote action', :dislike, :answer, -1
   end
 end

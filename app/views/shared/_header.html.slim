@@ -1,10 +1,10 @@
 nav
-  ul.nav
+  ul.nav.justify-content-end
     - if user_signed_in?
-      li style="float: right;"
-        = link_to "Log out", destroy_user_session_path, method: :delete
+      li.nav-item
+        = link_to "Log out", destroy_user_session_path, method: :delete, class: "nav-link"
     - else
-      li
-        = link_to 'Login', new_user_session_path
-      li
-        = link_to 'Sign up', new_user_registration_path
+      li.nav-item
+        = link_to 'Login', new_user_session_path, class: "nav-link"
+      li.nav-item
+        = link_to 'Sign up', new_user_registration_path, class: "nav-link"
