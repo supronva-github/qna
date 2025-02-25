@@ -8,20 +8,20 @@ module Voted
   def like
     result = @votable.vote_up(current_user)
 
-    if result.persisted?
-      render json: result, status: :ok
+    if result == :removed
+      render json: { message: "Like removed" }, status: :ok
     else
-      render json: result.errors.full_messages, status: :unprocessable_entity
+      render json: { message: "Vote successful", result: result }, status: :ok
     end
   end
 
   def dislike
     result = @votable.vote_down(current_user)
 
-    if result.persisted?
-      render json: result, status: :ok
+    if result == :removed
+      render json: { message: "Dislike removed" }, status: :ok
     else
-      render json: result.errors.full_messages, status: :unprocessable_entity
+      render json: { message: "Vote successful", result: result }, status: :ok
     end
   end
 

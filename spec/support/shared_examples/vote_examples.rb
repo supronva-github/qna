@@ -4,7 +4,7 @@ RSpec.shared_examples 'vote action' do |action, votable_type, value|
   before { login(user) }
 
   context 'when you vote' do
-    it 'creates a vote with value 1 and returns :ok' do
+    it 'creates a vote with the correct value and returns :ok' do
       expect { post action, params: { id: votable.id }, as: :json }
         .to change(Vote, :count).by(1)
 
@@ -14,13 +14,25 @@ RSpec.shared_examples 'vote action' do |action, votable_type, value|
   end
 
   context 'when the user has already voted' do
-    let!(:vote) { create(:vote, user: user, votable: votable) }
+    let!(:vote) { create(:vote, user: user, votable: votable, value: value) }
 
-    it 'does not create a new vote and returns :unprocessable_entity' do
+    it 'removes the existing vote and returns :ok' do
+      expect { post action, params: { id: votable.id }, as: :json }
+        .to change(Vote, :count).by(-1)
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  context 'when the user re-votes with the opposite value' do
+    let!(:vote) { create(:vote, user: user, votable: votable, value: value == 1 ? -1 : 1) }
+
+    it 'does not create a new vote and returns :ok' do
       expect { post action, params: { id: votable.id }, as: :json }
         .not_to change(Vote, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:ok)
+      expect(Vote.last.value).to eq(value)
     end
   end
 end
