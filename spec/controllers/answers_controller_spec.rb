@@ -137,4 +137,12 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'POST #like' do
+    it_behaves_like 'vote action', :like, :answer, 1
+  end
+
+  describe 'POST #dislike' do
+    it_behaves_like 'vote action', :dislike, :answer, -1
+  end
 end

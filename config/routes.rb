@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'badges', to: 'users#badges'
 
   resources  :questions, concerns: :votable do
-    resources :answers, shallow: true, except: %i[index] do
+    resources :answers, shallow: true, except: %i[index], concerns: :votable do
       patch :best, on: :member
     end
   end
