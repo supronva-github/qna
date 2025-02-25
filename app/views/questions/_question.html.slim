@@ -1,7 +1,9 @@
-
 .question-errors
 h1 = question.title
 p =  question.body
+p.question-rating
+  = "Rating: "
+  span= question.rating
 .links
   p Links:
   ul
@@ -20,7 +22,8 @@ p =  question.body
   = link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
   = render 'form', question: question, local: false, html: { id: "edit-question-#{question.id}", class: 'hidden' }
 - if user_signed_in? && !current_user&.author_of?(question)
-  = link_to like_question_path(question), method: :post, class: 'btn btn-primary' do
-    i class="bi bi-hand-thumbs-up-fill"
-  = link_to dislike_question_path(question), method: :post, class: 'btn btn-primary' do
-    i class="bi bi-hand-thumbs-down-fill"
+  .vote-question
+    = link_to like_question_path(question), method: :post, class: 'btn btn-outline-primary', remote: true, aria: { label: 'Like' } do
+      i class="bi bi-hand-thumbs-up-fill"
+    = link_to dislike_question_path(question), method: :post, class: 'btn btn-outline-danger', remote: true, aria: { label: 'Dislike' } do
+      i class="bi bi-hand-thumbs-down-fill"

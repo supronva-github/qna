@@ -13,6 +13,10 @@ module Votable
     toggle_vote(user, -1)
   end
 
+  def rating
+    votes.sum(:value)
+  end
+
   private
 
   def toggle_vote(user, value)

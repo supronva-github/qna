@@ -9,9 +9,9 @@ module Voted
     result = @votable.vote_up(current_user)
 
     if result == :removed
-      render json: { message: "Like removed" }, status: :ok
+      render json: { message: "Like removed", rating: @votable.rating }, status: :ok
     else
-      render json: { message: "Vote successful", result: result }, status: :ok
+      render json: { message: "Vote successful", result: result, rating: @votable.rating }, status: :ok
     end
   end
 
@@ -19,9 +19,9 @@ module Voted
     result = @votable.vote_down(current_user)
 
     if result == :removed
-      render json: { message: "Dislike removed" }, status: :ok
+      render json: { message: "Dislike removed", rating: @votable.rating }, status: :ok
     else
-      render json: { message: "Vote successful", result: result }, status: :ok
+      render json: { message: "Vote successful", result: result, rating: @votable.rating }, status: :ok
     end
   end
 

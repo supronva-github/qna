@@ -1,5 +1,9 @@
 tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#{answer.id}"
   td = answer.body
+  td
+    p.answer-rating
+    = "Rating: "
+    span= answer.rating
   td.links
     p Links:
     ul
@@ -32,8 +36,9 @@ tr id="answer-#{answer.id}" class="#{'best' if answer&.best?}" data-answer-id="#
           = link_to_add_association 'Add link', f, :links, partial: 'shared/links_fields'
         = f.submit 'Save'
       = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    - if user_signed_in? && !current_user&.author_of?(answer)
-      = link_to like_answer_path(answer), method: :post, class: 'btn btn-primary' do
-        i class="bi bi-hand-thumbs-up-fill"
-      = link_to dislike_answer_path(answer), method: :post, class: 'btn btn-primary' do
-        i class="bi bi-hand-thumbs-down-fill"
+    .vote-answer
+      - if user_signed_in? && !current_user&.author_of?(answer)
+          = link_to like_answer_path(answer), method: :post, class: 'btn btn-outline-primary', remote: true do
+              i class="bi bi-hand-thumbs-up-fill"
+          = link_to dislike_answer_path(answer), method: :post, class: 'btn btn-outline-danger', remote: true do
+              i class="bi bi-hand-thumbs-down-fill"
